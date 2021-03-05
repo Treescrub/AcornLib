@@ -1,6 +1,7 @@
 # AcornLib
-A lightweight modular Squirrel library for Left 4 Dead 2.
+A lightweight modular Squirrel library for Left 4 Dead 2 VScripts.
 
+# Usage
 
 To load the library in the current scope use:
 
@@ -14,3 +15,7 @@ To load the library in a new table use:
 AcornLib <- {}
 IncludeScript("AcornLib", AcornLib)
 ```
+
+# API
+
+# Installation
