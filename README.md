@@ -19,3 +19,5 @@ IncludeScript("AcornLib", AcornLib)
 # API
 
 # Installation
+
+To install, download the [scripts](https://github.com/Treescrub/AcornLib/archive/master.zip) and unzip them into the **scripts/vscripts** folder in your addon or game installation.
