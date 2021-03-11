@@ -41,8 +41,23 @@ function Think() {
 				tasks.remove(i)
 				i--
 			}
-			task.args[task.funcKey]()
+			
+			ExecuteTask(task)
 		}
+	}
+}
+
+function ExecuteTask(task) {
+	if(typeof(task.args) == "table") {
+		local funcKey = UniqueString()
+
+		task.args[funcKey] <- task.func
+		task.args[funcKey]()
+
+		delete task.args[funcKey]
+	}
+	if(typeof(task.args) == "array") {
+		task.func.acall(task.args)
 	}
 }
 
@@ -102,16 +117,18 @@ function CancelTask(id) {
 }
 
 function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = false) {
-	local funcKey = UniqueString()
-	args[funcKey] <- func
-	
+
 	time = absoluteTime ? time : Time() + time
 	
 	logger.Debug("Scheduled task at time " + time)
 	
+	if(typeof(args) == "array") {
+		args.insert(0, {}) // Insert an empty table to be used as the "this" parameter
+	}
+
 	tasks.append({
 		id = task_count
-		funcKey = funcKey
+		func = func
 		time = time
 		args = args
 		repeat = repeat
