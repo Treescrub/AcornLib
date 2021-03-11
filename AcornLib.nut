@@ -13,12 +13,14 @@
 	entities - utilities to find and iterate through entities
 	utilities - list classes, other useful standard classes
 	print - printf, ClientPrint, error
+	convars - create custom convars and add listeners to convars
 
 */
 
 // TODO: Convert a script using HookController to this library
 // TODO: Look at scripts and determine common features/functions to include
 // TODO: will cyclic dependency cause issues loading/unloading? don't think so, when loading a module it checks if its already loaded
+// TODO: when loaded, determine the base path using getstackinfos(1).src and when doing anything with modules, use the base path
 
 
 modules <- {}
@@ -55,10 +57,10 @@ function LoadModule(name) {
 	
 	if(!TableIsModule(moduleTable))*/
 	
-	IncludeScript(name, moduleTable)
+	IncludeScript(GetFullModulePath(name), moduleTable)
 	
 	if(!TableIsModule(moduleTable)) {
-		printl("Failed to load module: Module \"" + name + "\" is not a valid module")
+		printl("Failed to load module: Module \"" + name + "\" is not a valid module or does not exist")
 		return false
 	}
 	
@@ -101,6 +103,7 @@ function LoadDependencies(dependenciesStr) {
 	}
 }
 
+// TODO: do not unload if other modules are dependent (unless forced). in case of 2+ modules depending on each other, unload both.
 // TODO: unload dependencies if no other modules are dependent, possibly expensive
 function UnloadModule(name) {
 	if(!HasModule(name))
@@ -131,3 +134,28 @@ function TableIsModule(table) {
 function HasModule(name) {
 	return name in modules
 }
+
+function GetFullModulePath(moduleName) {
+	return basePath + moduleName
+}
+
+basePath <- null
+
+local locationRegex = regexp(@"^scripts/vscripts/((?:.+/)*).+\.nu(?:c|t)$")
+
+function DetermineBasePath() {
+	local info = getstackinfos(1)
+	
+	local script = info.src
+	
+	if(!locationRegex.match(script)) {
+		printl("Unknown script source \"" + script + "\"")
+		return
+	}
+	
+	local matches = locationRegex.capture(script)
+	
+	basePath = script.slice(matches[1].begin, matches[1].end)
+}
+
+DetermineBasePath()

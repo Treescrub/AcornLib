@@ -246,7 +246,7 @@ function PadInt(value, amount) {
 	return newVal
 }
 
-local locationRegex = regexp(@"^(?:scripts/vscripts/)((?:[\w\s]+/)*[\w\s]+)(?:\.nut)?$")
+local locationRegex = regexp(@"^(?:scripts/vscripts/)((?:[\w\s]+/)*[\w\s]+)(?:\.nu(?:c|t))?$")
 
 // TODO: regex fails when called from script command
 
