@@ -37,11 +37,15 @@ function Think() {
 	for(local i = 0; i < tasks.len(); i++) {
 		local task = tasks[i]
 		if(Time() >= task.time) {
-			if(!task.repeat) {
+			if(task.repeat) {
+				if(!task.absoluteTime) {
+					task.time = Time() + task.delay
+				}
+			} else {
 				tasks.remove(i)
 				i--
 			}
-			
+
 			ExecuteTask(task)
 		}
 	}
@@ -118,9 +122,9 @@ function CancelTask(id) {
 
 function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = false) {
 
-	time = absoluteTime ? time : Time() + time
-	
-	logger.Debug("Scheduled task at time " + time)
+	local taskEndTime = absoluteTime ? time : Time() + time
+
+	logger.Debug("Scheduled " + (repeat ? "repeating" : "one-time") + " task to occur at time " + taskEndTime + " (id=" + task_count + ")")
 	
 	if(typeof(args) == "array") {
 		args.insert(0, {}) // Insert an empty table to be used as the "this" parameter
@@ -129,7 +133,9 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 	tasks.append({
 		id = task_count
 		func = func
-		time = time
+		absoluteTime = absoluteTime
+		delay = time
+		time = taskEndTime
 		args = args
 		repeat = repeat
 	})
