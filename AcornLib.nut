@@ -58,8 +58,6 @@ function LoadModule(name) {
 		return false
 	}
 	
-	modules[name] <- moduleTable
-	
 	if("dependencies" in moduleTable && typeof(moduleTable["dependencies"]) == "string") 
 		LoadDependencies(moduleTable["dependencies"])
 		
@@ -67,6 +65,8 @@ function LoadModule(name) {
 		moduleTable["OnLoad"]()
 		
 	PrintModuleLoadInfo(moduleTable)
+
+	modules[name] <- moduleTable
 	
 	return true
 }
