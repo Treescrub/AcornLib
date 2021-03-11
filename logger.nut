@@ -115,8 +115,6 @@ function Fatal(message) {
 }
 
 
-// TODO: Add normal (non file) buffering options
-
 function SetFileBufferSize(size, scriptOverride = null) {
 	local script = scriptOverride ? scriptOverride : GetCallerInfo()
 	
@@ -159,7 +157,6 @@ function FlushFileBuffer(scriptOverride = null) {
 }
 
 
-// TODO: check the source to see if it's a module, and give extra info if it is
 function Log(message, level, callerInfo) {
 	local script = callerInfo.script
 	
@@ -247,8 +244,6 @@ function PadInt(value, amount) {
 }
 
 local locationRegex = regexp(@"^(?:scripts/vscripts/)((?:[\w\s]+/)*[\w\s]+)(?:\.nu(?:c|t))?$")
-
-// TODO: regex fails when called from script command
 
 function GetCallerInfo(callLevel = 3) {
 	local stackInfo = getstackinfos(callLevel)

@@ -101,7 +101,6 @@ function CancelTask(id) {
 	return false
 }
 
-// TODO: pass the args to the function?
 function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = false) {
 	local funcKey = UniqueString()
 	args[funcKey] <- func

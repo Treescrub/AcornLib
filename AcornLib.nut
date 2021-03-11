@@ -20,7 +20,6 @@
 // TODO: Convert a script using HookController to this library
 // TODO: Look at scripts and determine common features/functions to include
 // TODO: will cyclic dependency cause issues loading/unloading? don't think so, when loading a module it checks if its already loaded
-// TODO: when loaded, determine the base path using getstackinfos(1).src and when doing anything with modules, use the base path
 
 
 modules <- {}
@@ -34,7 +33,6 @@ function RefreshModule(name) {
 		return false
 }
 
-// TODO: Add base function for external scripts to set module log level (a function that scripts can use to set the log level)
 function LoadModule(name) {
 	if(typeof(name) != "string") {
 		printl("Failed to load module: The module name \"" + name + "\" is not a string")
@@ -52,10 +50,6 @@ function LoadModule(name) {
 	}
 	
 	moduleTable.setdelegate(this)
-		
-	/*IncludeScript(name + "/" + name, moduleTable)
-	
-	if(!TableIsModule(moduleTable))*/
 	
 	IncludeScript(GetFullModulePath(name), moduleTable)
 	
@@ -103,8 +97,6 @@ function LoadDependencies(dependenciesStr) {
 	}
 }
 
-// TODO: do not unload if other modules are dependent (unless forced). in case of 2+ modules depending on each other, unload both.
-// TODO: unload dependencies if no other modules are dependent, possibly expensive
 function UnloadModule(name) {
 	if(!HasModule(name))
 		return false
