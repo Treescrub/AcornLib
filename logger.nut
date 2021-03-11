@@ -160,6 +160,7 @@ function FlushFileBuffer(scriptOverride = null) {
 	return true
 }
 
+local scriptNameRegex = regexp(@"(?:.+/)*(.+)")
 
 function Log(message, level, callerInfo) {
 	local script = callerInfo.script
@@ -167,7 +168,17 @@ function Log(message, level, callerInfo) {
 	if(!IsLevelSet(script) || !IsLevelAllowed(level, script)) 
 		return false
 	
-	message = callerInfo.script + ":" + callerInfo.func + ":" + callerInfo.line + " - " + message
+	local matches = scriptNameRegex.capture(script)
+	local scriptName = script.slice(matches[1].begin, matches[1].end)
+
+	local prefix
+	if(root.HasModule(scriptName)) {
+		prefix = "MODULE " + root[scriptName].name + " v" + root[scriptName].version + " " + scriptName
+	} else {
+		prefix = callerInfo.script
+	}
+
+	message = prefix + ":" + callerInfo.func + ":" + callerInfo.line + " - " + message
 	
 	message = GetLevelName(level) + " " + message
 	
