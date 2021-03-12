@@ -26,11 +26,31 @@ modules <- {}
 
 this.setdelegate(modules)
 
+function RefreshModules(...) {
+	local failedOnce = false
+	foreach(module in vargv) {
+		if(!RefreshModule(module))
+			failedOnce = true
+	}
+
+	return !failedOnce
+}
+
 function RefreshModule(name) {
 	UnloadModule(name)
 	
 	if(!LoadModule(name))
 		return false
+}
+
+function LoadModules(...) {
+	local failedOnce = false
+	foreach(module in vargv) {
+		if(!LoadModule(module))
+			failedOnce = true
+	}
+
+	return !failedOnce
 }
 
 function LoadModule(name) {
@@ -97,6 +117,16 @@ function LoadDependencies(dependenciesStr) {
 			LoadModule(dependency)
 		}
 	}
+}
+
+function UnloadModules(...) {
+	local failedOnce = false
+	foreach(module in vargv) {
+		if(!UnloadModule(module))
+			failedOnce = true
+	}
+
+	return !failedOnce
 }
 
 function UnloadModule(name) {
