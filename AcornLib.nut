@@ -27,10 +27,13 @@ modules <- {}
 this.setdelegate(modules)
 
 function RefreshModule(name) {
-	UnloadModule(name)
+	if(!UnloadModule(name))
+		return false
 	
 	if(!LoadModule(name))
 		return false
+
+	return true
 }
 
 function LoadModule(name) {
