@@ -100,6 +100,15 @@ bool RefreshModules(...)
 
 The same as RefreshModule, but takes any number of module names.
 
+### **Module existence**
+
+### *HasModule*
+```Squirrel
+bool HasModule(string moduleName)
+```
+
+Returns true if the module is loaded, false otherwise.
+
 # Installation
 
 To install, download the [scripts](https://github.com/Treescrub/AcornLib/archive/master.zip) and unzip them into the **scripts/vscripts** folder in your addon or game installation.
