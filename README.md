@@ -16,9 +16,37 @@ AcornLib <- {}
 IncludeScript("AcornLib", AcornLib)
 ```
 
-All module names are converted to lowercase when loaded, any accesses of modules by a non-lowercase name will fail.
+## Module loading
+
+This example loads the **logger** module if it isn't already loaded.
+
+```Squirrel
+AcornLib.LoadModule("logger")
+```
+
 
 # API
+
+## Module loading
+
+```Squirrel
+bool AcornLib.LoadModule(string moduleName)
+```
+LoadModule returns a boolean indicating if the loading succeeded.
+
+The module name should match a module script that is in the same directory as the main AcornLib script.
+
+The load will fail if the module is already loaded, or the script isn't a valid module script (see MODULE SCRIPT INFO when I write it), or the script encountered an error.
+
+The OnLoad function in the module script will be called once fully loaded and all dependencies have been loaded.
+
+All module names are converted to lowercase when loaded, any access of modules by a non-lowercase name will fail.
+
+After a module has successfully loaded, you can access the module script table with:
+```Squirrel
+AcornLib.module_name
+AcornLib[module_name]
+```
 
 # Installation
 
