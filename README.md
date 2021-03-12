@@ -35,6 +35,7 @@ AcornLib.UnloadModule("logger")
 
 ### **Module loading**
 
+### *LoadModule*
 ```Squirrel
 bool LoadModule(string moduleName)
 ```
@@ -54,6 +55,7 @@ AcornLib.module_name
 AcornLib[module_name]
 ```
 
+### *LoadModules*
 ```Squirrel
 bool LoadModules(...)
 ```
@@ -62,6 +64,7 @@ The same as LoadModule, but takes any number of module names.
 
 ### **Module unloading**
 
+### *UnloadModule*
 ```Squirrel
 bool UnloadModule(string moduleName)
 ```
@@ -72,6 +75,7 @@ Returns true if the module was successfully unloaded, false if the module is not
 
 Calls OnUnload in the module script just before the module is removed.
 
+### *UnloadModules*
 ```Squirrel
 bool UnloadModules(...)
 ```
