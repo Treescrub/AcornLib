@@ -24,13 +24,21 @@ This example loads the **logger** module if it isn't already loaded.
 AcornLib.LoadModule("logger")
 ```
 
+## Module unloading
+
+```Squirrel
+AcornLib.UnloadModule("logger")
+```
+
 
 # API
 
-## Module loading
+## AcornLib
+
+### **Module loading**
 
 ```Squirrel
-bool AcornLib.LoadModule(string moduleName)
+bool LoadModule(string moduleName)
 ```
 LoadModule returns a boolean indicating if the loading succeeded.
 
@@ -47,6 +55,24 @@ After a module has successfully loaded, you can access the module script table w
 AcornLib.module_name
 AcornLib[module_name]
 ```
+
+### **Module unloading**
+
+```Squirrel
+bool UnloadModule(string moduleName)
+```
+
+Unloads the provided module.
+
+Returns true if the module was successfully unloaded, false if the module is not loaded.
+
+Calls OnUnload in the module script just before the module is removed.
+
+```Squirrel
+bool UnloadModules(...)
+```
+
+The same as UnloadModule, but takes any number of module names.
 
 # Installation
 
