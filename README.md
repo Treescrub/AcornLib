@@ -18,8 +18,6 @@ IncludeScript("AcornLib", AcornLib)
 
 ## Module loading
 
-This example loads the **logger** module if it isn't already loaded.
-
 ```Squirrel
 AcornLib.LoadModule("logger")
 ```
@@ -55,6 +53,12 @@ After a module has successfully loaded, you can access the module script table w
 AcornLib.module_name
 AcornLib[module_name]
 ```
+
+```Squirrel
+bool LoadModules(...)
+```
+
+The same as LoadModule, but takes any number of module names.
 
 ### **Module unloading**
 
