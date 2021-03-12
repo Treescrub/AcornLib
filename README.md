@@ -78,6 +78,24 @@ bool UnloadModules(...)
 
 The same as UnloadModule, but takes any number of module names.
 
+### **Module refreshing**
+
+### *RefreshModule*
+```Squirrel
+bool RefreshModule(string moduleName)
+```
+
+Unloads and then loads the module.
+
+Returns true if the module was successfully unloaded and loaded, false otherwise.
+
+### *RefreshModules*
+```Squirrel
+bool RefreshModules(...)
+```
+
+The same as RefreshModule, but takes any number of module names.
+
 # Installation
 
 To install, download the [scripts](https://github.com/Treescrub/AcornLib/archive/master.zip) and unzip them into the **scripts/vscripts** folder in your addon or game installation.
