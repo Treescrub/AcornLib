@@ -31,7 +31,7 @@ AcornLib.UnloadModule("logger")
 
 # API
 
-(The wiki)[https://github.com/Treescrub/AcornLib/wiki] has detailed documentation about the main AcornLib script and modules.
+[The wiki](https://github.com/Treescrub/AcornLib/wiki) has detailed documentation about the main AcornLib script and modules.
 
 # Installation
 
