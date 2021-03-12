@@ -16,6 +16,8 @@ AcornLib <- {}
 IncludeScript("AcornLib", AcornLib)
 ```
 
+All module names are converted to lowercase when loaded, any accesses of modules by a non-lowercase name will fail.
+
 # API
 
 # Installation
