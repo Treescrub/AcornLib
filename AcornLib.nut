@@ -38,6 +38,8 @@ function LoadModule(name) {
 		printl("Failed to load module: The module name \"" + name + "\" is not a string")
 		return false
 	}
+
+	name = name.tolower()
 	
 	if(HasModule(name)) {
 		printl("Failed to load module: Module \"" + name + "\" is already loaded")
@@ -98,6 +100,8 @@ function LoadDependencies(dependenciesStr) {
 }
 
 function UnloadModule(name) {
+	name = name.tolower()
+
 	if(!HasModule(name))
 		return false
 		
@@ -124,7 +128,7 @@ function TableIsModule(table) {
 }
 
 function HasModule(name) {
-	return name in modules
+	return name.tolower() in modules
 }
 
 function GetFullModulePath(moduleName) {
