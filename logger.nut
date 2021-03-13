@@ -27,6 +27,7 @@ TimeType <- {
 }
 
 file_logging <- {}
+
 log_levels <- {}
 log_locations <- {}
 log_times <- {}
@@ -67,6 +68,17 @@ function SetTimeType(timeType, scriptOverride = null) {
 	log_times[name] <- timeType
 }
 
+
+function SetFileLevel(level, scriptOverride = null) {
+	local script = scriptOverride ? scriptOverride : GetCallerInfo().script
+	
+	Debug("Setting file level of script \"" + script + "\" to " + GetLevelName(level))
+	
+	VerifyFileSettings(script)
+
+	file_logging[script].level = level
+}
+
 function EnableLogFile(scriptOverride = null) {
 	SetLogFileEnabled(true, scriptOverride ? scriptOverride : GetCallerInfo().script)
 }
@@ -76,13 +88,70 @@ function DisableLogFile(scriptOverride = null) {
 }
 
 function SetLogFileEnabled(value, scriptOverride = null) {
-	local index = scriptOverride ? scriptOverride : GetCallerInfo().script
+	local script = scriptOverride ? scriptOverride : GetCallerInfo().script
 	
-	if(index in file_logging) {
-		file_logging[index].enabled = value
-	} else {
-		file_logging[index] <- {
-			enabled = value
+	VerifyFileSettings(script)
+
+	file_logging[script].enabled = value
+}
+
+function SetFileBufferSize(size, scriptOverride = null) {
+	local script = scriptOverride ? scriptOverride : GetCallerInfo().script
+	
+	VerifyFileSettings(script)
+		
+	file_logging[script].bufferSize = size
+	
+	if(file_logging[script].buffer.len() >= size) {
+		FlushFileBuffer(script)
+	}
+		
+	return true
+}
+
+function FlushFileBuffer(scriptOverride = null) {
+	local script = scriptOverride ? scriptOverride : GetCallerInfo().script
+	
+	VerifyFileSettings(script)
+	
+	local fileName = script + "_log.txt"
+
+	local splitFilename = split(fileName, "/\\")
+
+	fileName = ""
+
+	foreach(index, value in splitFilename) {
+		fileName += value
+
+		if(index < splitFilename.len() - 1) {
+			fileName += "_"
+		}
+	}
+
+	local fileContents = FileToString(fileName)
+	
+	if(fileContents == null) {
+		fileContents = ""
+	}
+	
+	foreach(val in file_logging[script].buffer) {
+		fileContents += val + "\n"
+	}
+	
+	StringToFile(fileName, fileContents)
+	
+	file_logging[script].buffer.clear()
+
+	Debug("Flushing file buffer for script \"" + script + "\"")
+	
+	return true
+}
+
+function VerifyFileSettings(script) {
+	if(!(script in file_logging)) {
+		file_logging[script] <- {
+			level = LogLevel.OFF
+			enabled = false
 			buffer = []
 			bufferSize = DEFAULT_BUFFER_SIZE
 		}
@@ -118,55 +187,10 @@ function Fatal(message) {
 	Log(message, LogLevel.FATAL, GetCallerInfo())
 }
 
-
-function SetFileBufferSize(size, scriptOverride = null) {
-	local script = scriptOverride ? scriptOverride : GetCallerInfo()
-	
-	if(!(script in file_logging))
-		return false
-		
-	local fileLogSettings = file_logging[script]
-		
-	fileLogSettings.bufferSize = size
-	
-	if(fileLogSettings.buffer.len() >= size) {
-		FlushFileBuffer(script)
-	}
-		
-	return true
-}
-
-function FlushFileBuffer(scriptOverride = null) {
-	local script = scriptOverride ? scriptOverride : GetCallerInfo().script
-	if(!(script in file_logging))
-		return false
-	
-	local fileName = script + "_log.txt"
-	local fileLogSettings = file_logging[script]
-	local fileContents = FileToString(fileName)
-	
-	if(fileContents == null) {
-		fileContents = ""
-	}
-	
-	foreach(val in fileLogSettings.buffer) {
-		fileContents += val + "\n"
-	}
-	
-	StringToFile(fileName, fileContents)
-	
-	fileLogSettings.buffer.clear()
-	
-	return true
-}
-
 local scriptNameRegex = regexp(@"(?:.+/)*(.+)")
 
 function Log(message, level, callerInfo) {
 	local script = callerInfo.script
-	
-	if(!IsLevelSet(script) || !IsLevelAllowed(level, script)) 
-		return false
 	
 	local matches = scriptNameRegex.capture(script)
 	local scriptName = script.slice(matches[1].begin, matches[1].end)
@@ -186,19 +210,21 @@ function Log(message, level, callerInfo) {
 	if(timestamp != null)
 		message = timestamp + " " + message + " "
 		
-	local location = script in log_locations ? log_locations[script] : LogLocation.CONSOLE
+	if(IsLevelSet(script) && IsLevelAllowed(level, script)) {
+		local location = script in log_locations ? log_locations[script] : LogLocation.CONSOLE
+		
+		if(location & LogLocation.CONSOLE) {
+			printl(message)
+		}
+		if(location & LogLocation.ERROR) {
+			error(message + "\n")
+		}
+		if(location & LogLocation.CHAT) {
+			ClientPrint(null, 3, message)
+		}
+	}
 	
-	if(location & LogLocation.CONSOLE) {
-		printl(message)
-	}
-	if(location & LogLocation.ERROR) {
-		error(message + "\n")
-	}
-	if(location & LogLocation.CHAT) {
-		ClientPrint(null, 3, message)
-	}
-	
-	if(script in file_logging && file_logging[script].enabled) {
+	if(IsFileLevelAllowed(level, script)) {
 		local settings = file_logging[script]
 		
 		settings.buffer.append(message)
@@ -231,6 +257,10 @@ function IsLevelSet(script) {
 
 function IsLevelAllowed(level, script) {
 	return log_levels[script] >= level
+}
+
+function IsFileLevelAllowed(level, script) {
+	return script in file_logging && file_logging[script].level >= level
 }
 
 function GetTimeInfo(script) {
