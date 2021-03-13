@@ -210,7 +210,7 @@ function Log(message, level, callerInfo) {
 		ClientPrint(null, 3, message)
 	}
 	
-	if(script in file_logging && file_logging[script].enabled) {
+	if(IsFileLevelAllowed(level, script)) {
 		local settings = file_logging[script]
 		
 		settings.buffer.append(message)
@@ -243,6 +243,10 @@ function IsLevelSet(script) {
 
 function IsLevelAllowed(level, script) {
 	return log_levels[script] >= level
+}
+
+function IsFileLevelAllowed(level, script) {
+	return script in file_logging && file_logging[script].level >= level
 }
 
 function GetTimeInfo(script) {
