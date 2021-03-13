@@ -128,6 +128,8 @@ function FlushFileBuffer(scriptOverride = null) {
 	StringToFile(fileName, fileContents)
 	
 	file_logging[script].buffer.clear()
+
+	Debug("Flushing file buffer for script \"" + script + "\"")
 	
 	return true
 }
@@ -177,9 +179,6 @@ local scriptNameRegex = regexp(@"(?:.+/)*(.+)")
 function Log(message, level, callerInfo) {
 	local script = callerInfo.script
 	
-	if(!IsLevelSet(script) || !IsLevelAllowed(level, script)) 
-		return false
-	
 	local matches = scriptNameRegex.capture(script)
 	local scriptName = script.slice(matches[1].begin, matches[1].end)
 
@@ -198,16 +197,18 @@ function Log(message, level, callerInfo) {
 	if(timestamp != null)
 		message = timestamp + " " + message + " "
 		
-	local location = script in log_locations ? log_locations[script] : LogLocation.CONSOLE
-	
-	if(location & LogLocation.CONSOLE) {
-		printl(message)
-	}
-	if(location & LogLocation.ERROR) {
-		error(message + "\n")
-	}
-	if(location & LogLocation.CHAT) {
-		ClientPrint(null, 3, message)
+	if(IsLevelSet(script) && IsLevelAllowed(level, script)) {
+		local location = script in log_locations ? log_locations[script] : LogLocation.CONSOLE
+		
+		if(location & LogLocation.CONSOLE) {
+			printl(message)
+		}
+		if(location & LogLocation.ERROR) {
+			error(message + "\n")
+		}
+		if(location & LogLocation.CHAT) {
+			ClientPrint(null, 3, message)
+		}
 	}
 	
 	if(IsFileLevelAllowed(level, script)) {
