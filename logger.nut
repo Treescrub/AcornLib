@@ -115,6 +115,19 @@ function FlushFileBuffer(scriptOverride = null) {
 	VerifyFileSettings(script)
 	
 	local fileName = script + "_log.txt"
+
+	local splitFilename = split(fileName, "/\\")
+
+	fileName = ""
+
+	foreach(index, value in splitFilename) {
+		fileName += value
+
+		if(index < splitFilename.len() - 1) {
+			fileName += "_"
+		}
+	}
+
 	local fileContents = FileToString(fileName)
 	
 	if(fileContents == null) {
