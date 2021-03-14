@@ -148,5 +148,5 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 }
 
 function DoNextTick(func, args) {
-	ScheduleTask(func, 0, args)
+	return ScheduleTask(func, 0, args)
 }
