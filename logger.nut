@@ -38,6 +38,8 @@ log_times[root.basePath + short_name] <- TimeType.CLOCK
 
 custom_levels <- {}
 
+LogLevel.setdelegate(custom_levels)
+
 const DEFAULT_BUFFER_SIZE = 50
 
 function AddLevel(levelName, levelValue) {
@@ -189,7 +191,11 @@ function Fatal(message) {
 
 local scriptNameRegex = regexp(@"(?:.+/)*(.+)")
 
-function Log(message, level, callerInfo) {
+function Log(message, level, callerInfo = null) {
+	if(callerInfo == null) {
+		callerInfo = GetCallerInfo()
+	}
+
 	local script = callerInfo.script
 	
 	local matches = scriptNameRegex.capture(script)
