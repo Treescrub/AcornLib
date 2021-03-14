@@ -31,8 +31,8 @@ tickFunctions <- []
 tasks <- []
 
 function Think() {
-	foreach(func in tickFunctions) 
-		func()
+	foreach(tickFunc in tickFunctions) 
+		tickFunc.func()
 	
 	for(local i = 0; i < tasks.len(); i++) {
 		local task = tasks[i]
@@ -65,6 +65,8 @@ function ExecuteTask(task) {
 	}
 }
 
+tick_func_count <- 1
+
 function RegisterTickFunction(func, scope = null) {
 	if(typeof(func) != "function" && typeof(func) != "native function") {
 		logger.Debug("Failed to register tick function, function is not a function")
@@ -86,22 +88,24 @@ function RegisterTickFunction(func, scope = null) {
 	if(scope)
 		func = func.bindenv(scope)
 	
-	tickFunctions.append(func)
+	tickFunctions.append({
+		func = func
+		id = tick_func_count
+	})
 	
-	logger.Debug("Registered " + infos.src + ":" + infos.name + " as a tick function")
+	logger.Debug("Registered tick function (id=" + tick_func_count + ")")
 	
-	return func
+	return tick_func_count++
 }
 
-function RemoveTickFunction(func) {	
+function RemoveTickFunction(id) {	
 	for(local i = 0; i < tickFunctions.len(); i++) {
-		if(tickFunctions[i] == func) {
+		if(tickFunctions[i].id == id) {
 			tickFunctions.remove(i)
+			logger.Debug("Removed tick function (id=" + id + ")")
 			return true
 		}
 	}
-	
-	logger.Debug("Cannot remove function \"" + func.getinfos().name + "\", it isn't a tick function")
 	
 	return false
 }
@@ -140,11 +144,7 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 		repeat = repeat
 	})
 	
-	local temp = task_count
-	
-	task_count++
-	
-	return temp
+	return task_count++
 }
 
 function DoNextTick(func, args) {
