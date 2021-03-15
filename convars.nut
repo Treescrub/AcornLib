@@ -27,23 +27,25 @@ function Think() {
 	foreach(listener in convarListeners) {
 		local currentValue = Convars.GetStr(listener.name)
 
-		if(Convars.GetStr(listener.name) != listener.oldValue) {
-			listener.func(listener.name, listener.oldValue, Convars.GetStr(listener.name))
+		if(currentValue != listener.oldValue && listener.oldValue != null) {
+			listener.func(listener.name, listener.oldValue, currentValue)
 		}
+
+		listener.oldValue <- currentValue
 	}
 }
 
 function AddCustomConvar(convarName, defaultValue) {
 	SendToServerConsole("setinfo " + convarName + " " + defaultValue)
 
-	Debug("Added custom convar \"" + convarName + "\" with a default value of \"" + defaultValue + "\"")
+	logger.Debug("Added custom convar \"" + convarName + "\" with a default value of \"" + defaultValue + "\"")
 }
 
 listener_count <- 0
 
 function AddConvarListener(convarName, func) {
-	if(Convars.GetStr(convarName) == null) { // Convar doesn't exist
-		Warn("Could not add listener for the convar \"" + convarName + "\", it doesn't exist.")
+	if(Convars.GetStr(convarName) == null) {
+		logger.Warn("The convar \"" + convarName + "\" doesn't exist.")
 
 		return -1
 	}
@@ -52,9 +54,10 @@ function AddConvarListener(convarName, func) {
 		name = convarName
 		func = func
 		id = listener_count
+		oldValue = null
 	})
 
-	Debug("Added convar listener to the convar \"" + convarName + "\"")
+	logger.Debug("Added convar listener to the convar \"" + convarName + "\"")
 
 	return listener_count++
 }
@@ -68,7 +71,7 @@ function RemoveConvarListener(id) {
 		}
 	}
 
-	Warn("Failed to remove convar listener with id " + id)
+	logger.Warn("Failed to remove convar listener with id " + id)
 
 	return false
 }
