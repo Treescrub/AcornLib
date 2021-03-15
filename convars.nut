@@ -5,7 +5,7 @@ dependencies <- "logging, timing"
 description <- "Provides custom convar creation and convar change listening"
 
 
-tickFuncId <- 0
+local tickFuncId = null
 
 function OnLoad() {
     logger.SetLevel(logger.LogLevel.DEBUG)
@@ -21,18 +21,41 @@ function OnUnload() {
 }
 
 
+local convarListeners = []
+
 function Think() {
+	foreach(listener in convarListeners) {
+		local currentValue = Convars.GetStr(listener.name)
 
+		if(Convars.GetStr(listener.name) != listener.oldValue) {
+			listener.func(listener.name, listener.oldValue, Convars.GetStr(listener.name))
+		}
+	}
 }
 
-function AddCustomConvar() {
-
+function AddCustomConvar(convarName, defaultValue) {
+	SendToServerConsole("setinfo " + convarName + " " + defaultValue)
 }
 
-function AddConvarListener() {
+listener_count <- 0
 
+function AddConvarListener(convarName, func) {
+	convarListeners.append({
+		name = convarName
+		func = func
+		id = listener_count
+	})
+
+	return listener_count++
 }
 
-function RemoveConvarListener() {
-    
+function RemoveConvarListener(id) {
+	foreach(index, listener in convarListeners) {
+		if(listener.id = id) {
+			convarListeners.remove(index)
+			return true
+		}
+	}
+
+	return false
 }
