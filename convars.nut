@@ -53,8 +53,6 @@ function AddConvarListener(convarName, func) {
 		func = func
 		id = listener_count
 	})
-	
-	// TODO: check if the convar actually exists
 
 	Debug("Added convar listener to the convar \"" + convarName + "\"")
 
