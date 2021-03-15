@@ -47,7 +47,7 @@ function AddConvarListener(convarName, func) {
 	if(Convars.GetStr(convarName) == null) {
 		logger.Warn("The convar \"" + convarName + "\" doesn't exist.")
 
-		return -1
+		return false
 	}
 
 	convarListeners.append({
@@ -57,14 +57,14 @@ function AddConvarListener(convarName, func) {
 		oldValue = null
 	})
 
-	logger.Debug("Added convar listener to the convar \"" + convarName + "\"")
+	logger.Debug("Added convar listener to the convar \"" + convarName + "\" (id=" + listener_count + ")")
 
 	return listener_count++
 }
 
 function RemoveConvarListener(id) {
 	foreach(index, listener in convarListeners) {
-		if(listener.id = id) {
+		if(listener.id == id) {
 			convarListeners.remove(index)
 
 			return true
