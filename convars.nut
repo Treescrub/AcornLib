@@ -43,7 +43,7 @@ function AddCustomConvar(convarName, defaultValue) {
 
 listener_count <- 0
 
-function AddConvarListener(convarName, func) {
+function AddConvarListener(convarName, func, scope = null) {
 	if(Convars.GetStr(convarName) == null) {
 		logger.Warn("The convar \"" + convarName + "\" doesn't exist.")
 
@@ -52,7 +52,7 @@ function AddConvarListener(convarName, func) {
 
 	convarListeners.append({
 		name = convarName
-		func = func
+		func = scope ? func.bindenv(scope) : func
 		id = listener_count
 		oldValue = null
 	})
