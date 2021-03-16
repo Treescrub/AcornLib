@@ -1,3 +1,6 @@
+// The most up to date version of AcornLib can be found at: https://github.com/Treescrub/AcornLib
+
+
 /* Module ideas
 
 	events - game events
