@@ -42,10 +42,12 @@ class PlayerInfo {
 class Callback {
 	func = null
 	key = 0
+	id = 0
 	
-	constructor(func, key) {
+	constructor(func, key, id) {
 		this.func = func
 		this.key = key
+		this.id = id
 	}
 	
 	function GetFunction() {
@@ -54,6 +56,10 @@ class Callback {
 	
 	function GetKey() {
 		return key
+	}
+
+	function GetID() {
+		return id
 	}
 }
 
@@ -66,21 +72,30 @@ KeyState <- {
 	END = 2
 }
 
+key_callback_count <- 0
+
 // callback function is passed player and keystate
-function RegisterKeyCallback(func, key) {
-	for(local i = 0; i < keyCallbacks.len(); i++) {
-		foreach(idx, callback in keyCallbacks) {
-			if(callback.GetFunction() == func) {
-				keyCallbacks.remove(idx)
-				logger.Info("Replaced key press callback function \"" + callback.GetFunction() + "\" with \"" + func + "\"")
-				break
-			}
+function RegisterKeyCallback(func, key, scope = null) {	
+	func = func.bindenv(scope ? scope : getroottable())
+
+	keyCallbacks.append(Callback(func, key, key_callback_count))
+	
+	logger.Info("Added key press callback for key \"" + GetKeyName(key) + "\" (id=" + key_callback_count + ")")
+
+	return key_callback_count++
+}
+
+function RemoveKeyCallback(id) {
+	foreach(index, callback in keyCallbacks) {
+		if(callback.GetID() == id) {
+			keyCallbacks.remove(index)
+			return true
 		}
 	}
-	
-	keyCallbacks.append(Callback(func, key))
-	
-	logger.Info("Added key press callback for function \"" + func + "\" with key \"" + GetKeyName(key) + "\"")
+
+	logger.Debug("Failed to remove key callback (id=" + id + ")")
+
+	return false
 }
 
 function OnTick() {
