@@ -16,6 +16,7 @@ function OnLoad() {
 
 function OnUnload() {
     callbacks.RemoveKeyCallback(jumpCallbackId)
+    timing.RemoveTickFunction(tickFuncId)
 }
 
 
