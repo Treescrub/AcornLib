@@ -143,8 +143,13 @@ function UnloadModule(name) {
 		
 	local moduleTable = modules[name]
 	
-	if("OnUnload" in moduleTable) 
-		moduleTable["OnUnload"]()
+	if("OnUnload" in moduleTable) {
+		try {
+			moduleTable["OnUnload"]()
+		} catch(exception) {
+			error("Failed to unload module \"" + name + "\": " + exception + "\n")
+		}
+	}
 	
 	moduleTable.clear()
 	
