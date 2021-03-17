@@ -133,7 +133,11 @@ function GetKeyName(keyId) {
 }
 
 function RunKeyCallback(callback, player, keyState) {
-	callback.GetFunction()(player, keyState)
+	try {
+		callback.GetFunction()(player, keyState)
+	} catch(exception) {
+		logger.Error("Ran into an error while running key callback: " + exception)
+	}
 }
 
 function UpdatePlayerInfos() {
