@@ -32,6 +32,8 @@ maxSprintTime <- 5
 stamina <- maxSprintTime
 
 function MaxSprintTimeChanged(convar, old, new) {
+    new = new.tofloat()
+
     maxSprintTime = new
     stamina = new
 
