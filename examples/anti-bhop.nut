@@ -30,7 +30,7 @@ function OnTick() {
 }
 
 function JumpKeyPress(player, keyState) {
-    if(keyState != 0) 
+    if(keyState != callbacks.KeyState.START) 
         return
 
     if(!player.ValidateScriptScope() || !("onGround" in player.GetScriptScope()) || !player.GetScriptScope()["onGround"])
