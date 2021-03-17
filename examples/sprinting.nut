@@ -34,6 +34,8 @@ stamina <- maxSprintTime
 function MaxSprintTimeChanged(convar, old, new) {
     maxSprintTime = new
     stamina = new
+
+    logger.Debug("Max sprint time changed: " + old + " -> " + new)
 }
 
 function OnTick() {
@@ -50,6 +52,8 @@ function WalkKeyPress(player, keyState) {
     switch(keyState) {
         case callbacks.KeyState.START:
             sprintStart = Time()
+            
+            logger.Info("Started sprinting")
             break
         case callbacks.KeyState.TICK:
             if(Time() - sprintStart < stamina) {
@@ -59,9 +63,8 @@ function WalkKeyPress(player, keyState) {
         case callbacks.KeyState.END:
             stamina -= Time() - sprintStart
             sprintStart = null
+
+            logger.Info("Stopped sprinting")
             break
-    }
-    if(keyState == callbacks.KeyState.START) {
-        sprintStart = Time()
     }
 }
