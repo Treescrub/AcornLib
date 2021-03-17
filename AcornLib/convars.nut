@@ -1,7 +1,7 @@
 version <- "1.0"
 name <- "Convars"
 short_name <- "convars"
-dependencies <- "logging, timing"
+dependencies <- "logger, timing"
 description <- "Provides custom convar creation and convar change listening"
 
 
@@ -71,7 +71,7 @@ function RemoveConvarListener(id) {
 		}
 	}
 
-	logger.Warn("Failed to remove convar listener with id " + id)
+	logger.Warn("Failed to remove convar listener (id=" + id + ")")
 
 	return false
 }
