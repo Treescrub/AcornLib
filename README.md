@@ -35,7 +35,7 @@ AcornLib.UnloadModule("logger")
 
 # Installation
 
-To install, download the latest release and unzip the scripts into the **scripts/vscripts** folder in your addon or game installation.
+To install, download **AcornLib.zip** from the [latest release](https://github.com/Treescrub/AcornLib/releases) and unzip the scripts into the **scripts/vscripts** folder in your addon or game installation.
 
 Or if you want the most recent version of the scripts, download the [source files](https://github.com/Treescrub/AcornLib/archive/master.zip) and place the scripts in the *AcornLib* folder into your **scripts/vscripts** folder.
 
