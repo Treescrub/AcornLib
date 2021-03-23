@@ -93,6 +93,8 @@ function LoadModule(name) {
 
 	modules[name] <- moduleTable
 
+	__CollectEventCallbacks(moduleTable, "OnGameEvent_", "GameEventCallbacks", RegisterScriptGameEventListener)
+
 	if("OnLoad" in moduleTable) 
 		moduleTable["OnLoad"]()
 	
