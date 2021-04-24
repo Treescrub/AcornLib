@@ -88,7 +88,7 @@ function LoadModule(name) {
 	
 	modules[name] <- moduleTable
 
-	if("dependencies" in moduleTable && typeof(moduleTable["dependencies"]) == "string") {
+	if("dependencies" in moduleTable) {
 		try {
 			LoadDependencies(moduleTable["dependencies"])
 		} catch(exception) {
@@ -120,16 +120,33 @@ function PrintModuleLoadInfo(module) {
 
 local dependenciesRegex = regexp(@"\s*(\w+)[,\s$]*")
 
-function LoadDependencies(dependenciesStr) {
-	for(local start = 0, match = null; match = dependenciesRegex.search(dependenciesStr, start); start = match.end) {
-		local section = dependenciesStr.slice(match.begin, match.end)
-		local group = dependenciesRegex.capture(section)
-		local dependency = section.slice(group[1].begin, group[1].end)
-		
-		if(!HasModule(dependency)) {
-			printl("Loading dependency: " + dependency)
-			LoadModule(dependency)
+function LoadDependencies(dependencies) {
+	if(typeof(dependencies) == "string") {
+		for(local start = 0, match = null; match = dependenciesRegex.search(dependencies, start); start = match.end) {
+			local section = dependencies.slice(match.begin, match.end)
+			local group = dependenciesRegex.capture(section)
+			local dependency = section.slice(group[1].begin, group[1].end)
+			
+			LoadDependency(dependency)
 		}
+	}
+
+	if(typeof(dependencies) == "array") {
+		foreach(index, dependency in dependencies) {
+			if(typeof(dependency) != "string") {
+				printl("Dependency '" + dependency + "' at index '" + index + "' is not a string")
+				continue
+			}
+
+			LoadDependency(dependency)
+		}
+	}
+}
+
+function LoadDependency(dependency) {
+	if(!HasModule(dependency)) {
+		printl("Loading dependency: " + dependency)
+		LoadModule(dependency)
 	}
 }
 
