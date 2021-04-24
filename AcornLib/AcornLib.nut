@@ -86,18 +86,12 @@ function LoadModule(name) {
 		return false
 	}
 	
-	modules[name] <- moduleTable
-
-	if("dependencies" in moduleTable && typeof(moduleTable["dependencies"]) == "string") {
-		try {
-			LoadDependencies(moduleTable["dependencies"])
-		} catch(exception) {
-			delete modules[name]
-			return false
-		}
-	}
-	
+	if("dependencies" in moduleTable && typeof(moduleTable["dependencies"]) == "string") 
+		LoadDependencies(moduleTable["dependencies"])
+		
 	PrintModuleLoadInfo(moduleTable)
+
+	modules[name] <- moduleTable
 
 	__CollectEventCallbacks(moduleTable, "OnGameEvent_", "GameEventCallbacks", RegisterScriptGameEventListener)
 
