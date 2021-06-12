@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Sprinting"
-short_name <- "sprinting"
 dependencies <- "constants,callbacks,convars,timing"
 description <- "Allows survivors to sprint for a short time instead of walking. Only works for one person."
 

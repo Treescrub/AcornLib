@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Chat Commands"
-short_name <- "chat_commands"
 dependencies <- "logger"
 description <- "Functions to manage chat commands"
 

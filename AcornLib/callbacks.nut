@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Callbacks"
-short_name <- "callbacks"
 description <- "Various callbacks"
 dependencies <- "logger,timing,constants"
 

@@ -1,6 +1,5 @@
 version <- "1.0" // Version string
 name <- "Human Friendly Module Name"
-short_name <- "lowercase_name_that_matches_script_name"
 dependencies <- "required,module,names, separated, by, commas"
 description <- "A short description of what this module provides"
 

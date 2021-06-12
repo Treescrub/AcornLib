@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Timing"
-short_name <- "timing"
 dependencies <- "logger"
 description <- "Functions to manage timing, which includes task scheduling and tick think functions"
 

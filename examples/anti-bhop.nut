@@ -1,6 +1,5 @@
 version <- "1.0.0"
 name <- "Anti-Bhop"
-short_name <- "anti-bhop"
 dependencies <- "logger,constants,callbacks, timing"
 description <- "Prevents speed gains from bunnyhopping"
 
