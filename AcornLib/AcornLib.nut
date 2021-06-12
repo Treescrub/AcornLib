@@ -79,10 +79,13 @@ function LoadModule(name) {
 	
 	moduleTable.setdelegate(this)
 	
-	IncludeScript(GetFullModulePath(name), moduleTable)
+	if(!IncludeScript(GetFullModulePath(name), moduleTable)) {
+		printl("Failed to load module: Module \"" + name + "\" does not exist")
+		return false
+	}
 	
 	if(!TableIsModule(moduleTable)) {
-		printl("Failed to load module: Module \"" + name + "\" is not a valid module or does not exist")
+		printl("Failed to load module: Module \"" + name + "\" is not a valid module")
 		return false
 	}
 	
