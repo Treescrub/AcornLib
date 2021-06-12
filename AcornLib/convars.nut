@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Convars"
-short_name <- "convars"
 dependencies <- "logger, timing"
 description <- "Provides custom convar creation and convar change listening"
 

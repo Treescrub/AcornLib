@@ -97,7 +97,7 @@ function LoadModule(name) {
 		}
 	}
 
-	PrintModuleLoadInfo(moduleTable)
+	PrintModuleLoadInfo(moduleTable, name)
 
 	__CollectEventCallbacks(moduleTable, "OnGameEvent_", "GameEventCallbacks", RegisterScriptGameEventListener)
 
@@ -107,8 +107,8 @@ function LoadModule(name) {
 	return true
 }
 
-function PrintModuleLoadInfo(module) {
-	printl("Loaded module: " + module["name"] + " (" + module["short_name"] + ")")
+function PrintModuleLoadInfo(module, name) {
+	printl("Loaded module: " + module["name"] + " (" + name + ")")
 	if("description" in module) 
 		printl("\t" + module["description"])
 		
@@ -190,7 +190,7 @@ function UnloadAllModules() {
 }
 
 function TableIsModule(table) {
-	return "name" in table && "version" in table && "short_name" in table
+	return "name" in table && "version" in table
 }
 
 function HasModule(name) {

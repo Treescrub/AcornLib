@@ -1,6 +1,5 @@
 version <- "1.0"
 name <- "Logger"
-short_name <- "logger"
 
 
 LogLevel <- {
@@ -32,9 +31,9 @@ log_levels <- {}
 log_locations <- {}
 log_times <- {}
 
-log_levels[root.basePath + short_name] <- LogLevel.DEBUG
-log_locations[root.basePath + short_name] <- LogLocation.CONSOLE
-log_times[root.basePath + short_name] <- TimeType.CLOCK
+log_levels[root.basePath + "logger"] <- LogLevel.DEBUG
+log_locations[root.basePath + "logger"] <- LogLocation.CONSOLE
+log_times[root.basePath + "logger"] <- TimeType.CLOCK
 
 custom_levels <- {}
 
