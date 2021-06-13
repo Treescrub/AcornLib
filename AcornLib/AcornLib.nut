@@ -124,26 +124,82 @@ function PrintModuleLoadInfo(module, name) {
 local dependenciesRegex = regexp(@"\s*(\w+)[,\s$]*")
 
 function LoadDependencies(dependencies) {
-	if(typeof(dependencies) == "string") {
-		for(local start = 0, match = null; match = dependenciesRegex.search(dependencies, start); start = match.end) {
-			local section = dependencies.slice(match.begin, match.end)
-			local group = dependenciesRegex.capture(section)
-			local dependency = section.slice(group[1].begin, group[1].end)
-			
-			LoadDependency(dependency)
+	local dependencyList = GetDependencies(dependencies)
+
+	if(dependencyList == null) {
+		printl("Failed to parse dependencies")
+		return false
+	}
+
+	foreach(dependency in dependencyList) {
+		LoadDependency(dependency)
+	}
+
+	return true
+}
+
+function UnloadDependencies(moduleTable) {
+	local dependencyCounts = {}
+
+	foreach(val in GetDependencies(moduleTable["dependencies"]))
+		dependencyCounts[val] <- 0
+
+	foreach(key, val in modules) {
+		if(!("dependencies" in modules[key]))
+			continue
+
+		local moduleDependencies = GetDependencies(modules[key]["dependencies"])
+
+		if(moduleDependencies == null)
+			continue
+
+		foreach(dependency in moduleDependencies) {
+			if(!(dependency in dependencyCounts))
+				continue
+
+			dependencyCounts[dependency]++
 		}
+	}
+
+	foreach(key, val in dependencyCounts) {
+		if(val == 0) {
+			UnloadModule(key)
+		}
+	}
+
+	return true
+}
+
+function GetDependencies(dependencies) {
+	if(typeof(dependencies) == "string") {
+		return GetDependenciesFromString(dependencies)
 	}
 
 	if(typeof(dependencies) == "array") {
 		foreach(index, dependency in dependencies) {
 			if(typeof(dependency) != "string") {
 				printl("Dependency '" + dependency + "' at index '" + index + "' is not a string")
-				continue
+				return null
 			}
-
-			LoadDependency(dependency)
 		}
 	}
+
+	printl("Dependency list '" dependencies "' is not a valid type")
+	return null
+}
+
+function GetDependenciesFromString(string) {
+	local dependencies = []
+
+	for(local start = 0, match = null; match = dependenciesRegex.search(string, start); start = match.end) {
+		local section = string.slice(match.begin, match.end)
+		local group = dependenciesRegex.capture(section)
+		local dependency = section.slice(group[1].begin, group[1].end)
+			
+		dependencies.append(dependency)
+	}
+
+	return dependencies
 }
 
 function LoadDependency(dependency) {
@@ -175,20 +231,31 @@ function UnloadModule(name) {
 		try {
 			moduleTable["OnUnload"]()
 		} catch(exception) {
-			error("Failed to unload module \"" + name + "\": " + exception + "\n")
+			error("Failed to properly unload module \"" + name + "\": " + exception + "\n")
 		}
 	}
 	
-	moduleTable.clear()
-	
 	delete modules[name]
+
+	if("dependencies" in moduleTable)
+		UnloadDependencies(moduleTable)
+
+	moduleTable.clear()
+
+	printl("Unloaded module '" + name + "'")
 	
 	return true
 }
 
 function UnloadAllModules() {
+	local moduleList = []
+
 	foreach(key, val in modules) {
-		UnloadModule(key)
+		moduleList.append(key)
+	}
+
+	foreach(moduleName in moduleList) {
+		UnloadModule(moduleName)
 	}
 }
 
