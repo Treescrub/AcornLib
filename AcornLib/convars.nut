@@ -52,6 +52,7 @@ function AddConvarListener(convarName, func, scope = null) {
 	convarListeners.append({
 		name = convarName
 		func = scope ? func.bindenv(scope) : func
+		scope = scope
 		id = listener_count
 		oldValue = null
 	})
@@ -73,4 +74,13 @@ function RemoveConvarListener(id) {
 	logger.Warn("Failed to remove convar listener (id=" + id + ")")
 
 	return false
+}
+
+function RemoveAllConvarListeners(scope) {
+	for(local i = 0; i < convarListeners.len(); i++) {
+		if(convarListeners[i].scope == scope) {
+			convarListeners.remove(i)
+			i--
+		}
+	}
 }
