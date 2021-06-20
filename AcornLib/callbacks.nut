@@ -42,11 +42,13 @@ class Callback {
 	func = null
 	key = 0
 	id = 0
+	scope = null
 	
-	constructor(func, key, id) {
+	constructor(func, key, id, scope) {
 		this.func = func
 		this.key = key
 		this.id = id
+		this.scope = scope
 	}
 	
 	function GetFunction() {
@@ -59,6 +61,10 @@ class Callback {
 
 	function GetID() {
 		return id
+	}
+
+	function GetScope() {
+		return scope
 	}
 }
 
@@ -77,7 +83,7 @@ key_callback_count <- 0
 function RegisterKeyCallback(func, key, scope = null) {	
 	func = func.bindenv(scope ? scope : getroottable())
 
-	keyCallbacks.append(Callback(func, key, key_callback_count))
+	keyCallbacks.append(Callback(func, key, key_callback_count, scope))
 	
 	logger.Info("Added key press callback for key \"" + GetKeyName(key) + "\" (id=" + key_callback_count + ")")
 
@@ -95,6 +101,15 @@ function RemoveKeyCallback(id) {
 	logger.Debug("Failed to remove key callback (id=" + id + ")")
 
 	return false
+}
+
+function RemoveAllKeyCallbacks(scope) {
+	for(local i = 0; i < keyCallbacks.len(); i++) {
+		if(keyCallbacks[i].GetScope() == scope) {
+			keyCallbacks.remove(i)
+			i--
+		}
+	}
 }
 
 function OnTick() {

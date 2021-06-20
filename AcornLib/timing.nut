@@ -90,6 +90,7 @@ function RegisterTickFunction(func, scope = null) {
 	tickFunctions.append({
 		func = func
 		id = tick_func_count
+		scope = scope
 	})
 	
 	logger.Debug("Registered tick function (id=" + tick_func_count + ")")
@@ -107,6 +108,15 @@ function RemoveTickFunction(id) {
 	}
 	
 	return false
+}
+
+function RemoveAllTickFunctions(scope) {
+	for(local i = 0; i < tickFunctions.len(); i++) {
+		if(tickFunctions[i].scope == scope) {
+			tickFunctions.remove(i)
+			i--
+		}
+	}
 }
 
 task_count <- 1

@@ -18,6 +18,7 @@ function RegisterCommand(command, func, scope = null) {
 	
 	commands.append({
 		commandName = command
+		scope = scope
 		func = func.bindenv(scope == null ? getroottable() : scope)
 	})
 	
@@ -37,6 +38,15 @@ function RemoveCommand(command) {
 	}
 	
 	return false
+}
+
+function RemoveAllCommands(scope) {
+	for(local i = 0; i < commands.len(); i++) {
+		if(commands[i].scope == scope) {
+			commands.remove(i)
+			i--
+		}
+	}
 }
 
 local commandRegex = regexp(@"^\s*([^\s]+)\s*$")
