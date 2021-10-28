@@ -182,6 +182,8 @@ function GetDependencies(dependencies) {
 				return null
 			}
 		}
+
+		return dependencies
 	}
 
 	printl("Dependency list '" dependencies "' is not a valid type")
