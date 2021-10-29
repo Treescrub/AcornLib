@@ -96,6 +96,7 @@ function LoadModule(name) {
 			LoadDependencies(moduleTable["dependencies"])
 		} catch(exception) {
 			delete modules[name]
+			printl("Failed to load module: Unable to load dependencies for module \"" + name + "\"")
 			return false
 		}
 	}
