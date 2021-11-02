@@ -118,8 +118,20 @@ function PrintModuleLoadInfo(module, name) {
 		
 	printl("\n\tVersion: " + module["version"])
 	
-	if("dependencies" in module) 
-		printl("\tDependencies: " + module["dependencies"])
+	if("dependencies" in module) {
+		local dependencies = GetDependencies(module["dependencies"])
+
+		local dependenciesStr = ""
+		for(local i = 0; i < dependencies.len(); i++) {
+			dependenciesStr += dependencies[i]
+
+			if(i != dependencies.len() - 1)
+				dependenciesStr += ", "
+		}
+		dependenciesStr = "[" + dependenciesStr + "]"
+		
+		printl("\tDependencies: " + dependenciesStr)
+	}
 }
 
 local dependenciesRegex = regexp(@"\s*(\w+)[,\s$]*")
