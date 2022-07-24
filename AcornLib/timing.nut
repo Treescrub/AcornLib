@@ -157,7 +157,7 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 }
 
 function ScheduleRepeatingTask(func, time, args = {}) {
-	ScheduleTask(func, time, args)
+	ScheduleTask(func, time, args, false, true)
 }
 
 function ScheduleSingleTask(func, time, args = {}, isTimeAbsolute = false) {
