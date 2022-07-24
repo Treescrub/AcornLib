@@ -156,6 +156,14 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 	return task_count++
 }
 
+function ScheduleRepeatingTask(func, time, args = {}) {
+	ScheduleTask(func, time, args)
+}
+
+function ScheduleSingleTask(func, time, args = {}, isTimeAbsolute = false) {
+	ScheduleTask(func, time, args, isTimeAbsolute)
+}
+
 function DoNextTick(func, args) {
 	return ScheduleTask(func, 0, args)
 }
