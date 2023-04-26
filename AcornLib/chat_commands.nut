@@ -13,19 +13,49 @@ function OnLoad() {
 
 commands <- []
 
-function RegisterCommand(command, func, scope = null) {
-	local removedDuplicate = RemoveCommand(command)
+function RegisterCommand(commandName, func, scope = null) {
+	local removedDuplicate = RemoveCommand(commandName)
 	
 	commands.append({
-		commandName = command
+		commandName = commandName
 		scope = scope
 		func = func.bindenv(scope == null ? getroottable() : scope)
 	})
 	
 	if(removedDuplicate) {
-		logger.Info("Replaced command \"" + command + "\"")
+		logger.Warn("Replaced command \"" + commandName + "\"")
 	} else {
-		logger.Info("Registered new command \"" + command + "\"")
+		logger.Info("Registered new command \"" + commandName + "\"")
+	}
+}
+
+function RegisterCommandAliases(commandName, ...) {
+	local registeredCommand
+	foreach(command in commands) {
+		if(command.commandName == commandName) {
+			registeredCommand = command
+		}
+	}
+
+	if(!registeredCommand) {
+		logger.Error("Failed to add aliases for command '" + commandName + "', no such command is registered!")
+		return
+	}
+
+	foreach(alias in vargv) {
+		if(typeof(alias) != "string") {
+			logger.Warn("Alias '" + alias + "' for command '" + commandName + "' is not a string!")
+			continue
+		}
+
+		commands.append({
+			aliasedCommand = commandName
+			commandName = alias
+			scope = registeredCommand.scope
+			func = registeredCommand.func
+		})
+
+		logger.Info("Added alias '" + alias + "' for command '" + commandName + "'")
 	}
 }
 
