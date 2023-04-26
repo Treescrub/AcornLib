@@ -61,7 +61,7 @@ function RegisterCommandAliases(commandName, ...) {
 
 function RemoveCommand(command) {
 	foreach(idx, val in commands) {
-		if(val["commandName"] == command) {
+		if(val["commandName"] == command || ("aliasedCommand" in val && val["aliasedCommand"] == command)) {
 			commands.remove(idx)
 			return true
 		}
