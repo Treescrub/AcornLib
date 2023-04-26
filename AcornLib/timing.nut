@@ -133,7 +133,7 @@ function CancelTask(id) {
 	return false
 }
 
-function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = false) {
+function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = false, scope = null) {
 
 	local taskEndTime = absoluteTime ? time : Time() + time
 
@@ -145,7 +145,7 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 
 	tasks.append({
 		id = task_count
-		func = func
+		func = func.bindenv(scope == null ? getroottable() : scope)
 		absoluteTime = absoluteTime
 		delay = time
 		time = taskEndTime
@@ -156,12 +156,12 @@ function ScheduleTask(func, time, args = {}, absoluteTime = false, repeat = fals
 	return task_count++
 }
 
-function ScheduleRepeatingTask(func, time, args = {}) {
-	ScheduleTask(func, time, args, false, true)
+function ScheduleRepeatingTask(func, time, args = {}, scope = null) {
+	ScheduleTask(func, time, args, false, true, scope)
 }
 
-function ScheduleSingleTask(func, time, args = {}, isTimeAbsolute = false) {
-	ScheduleTask(func, time, args, isTimeAbsolute)
+function ScheduleSingleTask(func, time, args = {}, isTimeAbsolute = false, scope = null) {
+	ScheduleTask(func, time, args, isTimeAbsolute, false, scope)
 }
 
 function DoNextTick(func, args) {
