@@ -164,6 +164,14 @@ function ScheduleSingleTask(func, time, args = {}, isTimeAbsolute = false, scope
 	ScheduleTask(func, time, args, isTimeAbsolute, false, scope)
 }
 
+function ScheduleAbsoluteTask(func, time, args = {}, scope = null) {
+	ScheduleSingleTask(func, time, args, true, scope)
+}
+
+function ScheduleRelativeTask(func, time, args = {}, scope = null) {
+	ScheduleSingleTask(func, time, args, false, scope)
+}
+
 function DoNextTick(func, args) {
 	return ScheduleTask(func, 0, args)
 }
