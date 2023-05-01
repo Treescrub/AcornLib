@@ -60,14 +60,17 @@ function RegisterCommandAliases(commandName, ...) {
 }
 
 function RemoveCommand(command) {
-	foreach(idx, val in commands) {
+	local removed = false
+	for(local i = 0; i < commands.len(); i++) {
+		local val = commands[i]
 		if(val["commandName"] == command || ("aliasedCommand" in val && val["aliasedCommand"] == command)) {
-			commands.remove(idx)
-			return true
+			commands.remove(i)
+			i--
+			removed = true
 		}
 	}
 	
-	return false
+	return removed
 }
 
 function RemoveAllCommands(scope) {
