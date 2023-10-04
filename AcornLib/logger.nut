@@ -8,8 +8,8 @@ LogLevel <- {
 	ERROR = 200
 	WARN = 300
 	INFO = 400
-	TRACE = 500
-	DEBUG = 600
+	DEBUG = 500
+	TRACE = 600
 	ALL = 2147483647
 }
 
